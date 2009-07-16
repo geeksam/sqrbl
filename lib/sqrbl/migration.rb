@@ -13,7 +13,7 @@ module Sqrbl
     end
 
     def group(name, &block)
-      groups << Group.new(name, &block)
+      groups << Group.new(self, name, &block)
     end
   end
 end

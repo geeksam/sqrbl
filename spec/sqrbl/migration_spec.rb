@@ -11,24 +11,34 @@ describe Migration do
             'hello world'
           end
         end
-        mig.groups.length.should == 1
-        mig.groups.first.should be_kind_of(Group)
-        mig.groups.first.description.should == 'first group'
+        mig.groups.all? { |group| group.should be_kind_of(Group) }
+        mig.groups.map(&:description).should == ['first group']
       end
     end
 
     describe "when the block calls #group twice" do
       it "should have two group with the proper descriptions" do
         mig = Migration.build do
-          group "first group" 
+          group "first group" do
+            'hello world'
+          end
           group "second group" do
             'goodbye world'
           end
         end
-        mig.groups.length.should == 2
         mig.groups.all? { |group| group.should be_kind_of(Group) }
         mig.groups.map(&:description).should == ['first group', 'second group']
       end
+    end
+
+    it "should pass itself as a dependency to any group it builds" do
+      mig = Migration.build do
+        group("first group"    ) { '' }
+        group("second group"   ) { '' }
+        group("group the third") { '' }
+      end
+
+      mig.groups.all? { |group| group.migration.should == mig }
     end
   end
 

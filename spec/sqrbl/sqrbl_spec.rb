@@ -1,11 +1,12 @@
 require File.join(File.dirname(__FILE__), %w[.. spec_helper])
 
+include Sqrbl
 
 describe Sqrbl do
 
   describe :migration do
     it "should invoke Sqrbl::Migration.build, passing it the block" do
-      Sqrbl::Migration.should_receive(:build).and_yield
+      Migration.should_receive(:build).and_yield
       Sqrbl.migration { 'Hello, world!' }
     end
 
