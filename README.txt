@@ -1,13 +1,12 @@
-sqrbl
-    copyright (c) 2009 raSANTIAGO + Associates LLC
-    http://www.rasantiago.com
+== SQrbL:  Making data migrations suck less since July 2009!
+
+    Copyright (c) 2009 raSANTIAGO + Associates LLC
+    http://www.rasantiago.com/
     http://github.com/rasantiago/
     
-    (Primarily written by Sam Livingston-Gray)
+    (SQrbL's primary author is Sam Livingston-Gray.)
 
 == DESCRIPTION:
-
-SQrbL:  Making data migrations suck less since mid-2009.
 
 SQrbL was created to help manage an extremely specific problem:  managing SQL-based database migrations.
 
@@ -23,7 +22,32 @@ WHY IT EXISTS:  SQL is a fantastic DSL for describing queries.  It's not bad at 
 
 == SYNOPSIS:
 
-  FIXME (code sample of usage)
+  Sqrbl.migration "Convert from old widgets to new widgets" do
+    group "Widgets" do
+      step "Create widgets" do
+        up do
+          action "Migrate old_widgets" {
+            <<-SQL
+              #{
+                insert_into("new_widgets", {
+                  :name     => 'widget_name',
+                  :part_num => 'CONCAT("X_", part_number)',
+                  :note     => '"Imported from old_widgets"',
+                })
+              }
+              FROM old_widgets
+            SQL
+          }
+        end
+
+        down do
+          action "Drop imported organizational contacts" {
+            'DELETE FROM new_widgets WHERE note LIKE "Imported from old_widgets"'
+          }
+        end
+      end
+    end
+  end
 
 == REQUIREMENTS:
 
