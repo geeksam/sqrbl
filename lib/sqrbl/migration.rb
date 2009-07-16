@@ -1,9 +1,19 @@
 module Sqrbl
   class Migration
+    attr_reader :groups
+
     def self.build(&block)
-      migration = self.new
-      # migration.instance_eval(&block)
-      migration
+      returning(self.new) do |migration|
+        migration.instance_eval(&block)
+      end
+    end
+
+    def initialize
+      @groups = []
+    end
+
+    def group(name, &block)
+      groups << Group.new(name, &block)
     end
   end
 end

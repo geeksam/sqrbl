@@ -49,6 +49,7 @@ module Sqrbl
 
 end  # module Sqrbl
 
+Sqrbl.require_all_libs_relative_to(__FILE__, 'core_exts')
 Sqrbl.require_all_libs_relative_to(__FILE__)
 
 # EOF

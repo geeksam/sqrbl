@@ -1,4 +1,4 @@
-# require 'rubygems'
+require 'rubygems'
 require 'spec'
 
 require File.expand_path(
