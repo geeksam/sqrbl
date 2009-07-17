@@ -9,6 +9,10 @@ module Sqrbl
       evaluate_block! unless options[:skip_block_evaluation]
     end
 
+    def method_missing(method, *args, &block)
+      step_pair.send(method, *args, &block)
+    end
+
     protected
     def evaluate_block!
       instance_eval(&block) if block
