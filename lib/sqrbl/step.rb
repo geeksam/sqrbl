@@ -5,6 +5,7 @@ module Sqrbl
     include Sqrbl::ExpectsBlockWithNew
     include Sqrbl::MethodMissingDelegation
     delegate_method_missing_to :step_pair
+    include HasTodos
 
     def initialize(step_pair, options = {}, &block)
       @step_pair = step_pair

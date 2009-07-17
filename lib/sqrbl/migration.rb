@@ -2,6 +2,8 @@ module Sqrbl
   class Migration
     attr_reader :groups
 
+    include HasTodos
+
     def self.build(&block)
       returning(self.new) do |migration|
         migration.instance_eval(&block)

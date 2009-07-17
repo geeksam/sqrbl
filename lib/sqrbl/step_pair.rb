@@ -6,6 +6,7 @@ module Sqrbl
     include Sqrbl::ExpectsBlockWithNew
     include Sqrbl::MethodMissingDelegation
     delegate_method_missing_to :group
+    include HasTodos
 
     def initialize(group, description, options = {}, &block)
       @group       = group

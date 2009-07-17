@@ -1,10 +1,11 @@
 module Sqrbl
   class Group
-    attr_reader :migration, :description, :block, :todos, :steps
+    attr_reader :migration, :description, :block, :steps
 
     include Sqrbl::ExpectsBlockWithNew
     include Sqrbl::MethodMissingDelegation
     delegate_method_missing_to :migration
+    include HasTodos
 
     def initialize(migration, description, options = {}, &block)
       @todos       = []
@@ -14,10 +15,6 @@ module Sqrbl
       @block       = lambda(&block)
 
       eval_block_on_initialize(options)
-    end
-
-    def todo(message)
-      todos << Todo.new(message, caller)
     end
 
     def step(message, &block)

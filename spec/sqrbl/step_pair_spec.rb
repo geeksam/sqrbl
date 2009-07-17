@@ -90,4 +90,16 @@ describe StepPair do
       step_pair.should be_valid
     end
   end
+
+  describe "when #todo is called" do
+    it "should create a Todo object that saves the message" do
+      pair = StepPair.new(@group, 'foo') { todo 'bar' }
+      pair.todos.map(&:message).should == ['bar']
+    end
+
+    it "should create a Todo object that saves the location of the #todo call" do
+      pair = StepPair.new(@group, 'foo') { todo 'bar' }; line_num = __LINE__
+      pair.todos.first.location.should == [__FILE__, line_num].join(':')
+    end
+  end
 end

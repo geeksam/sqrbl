@@ -42,4 +42,16 @@ describe Migration do
     end
   end
 
+  describe "when #todo is called" do
+    it "should create a Todo object that saves the message" do
+      mig = Migration.build { todo 'foo' }
+      mig.todos.map(&:message).should == ['foo']
+    end
+
+    it "should create a Todo object that saves the location of the #todo call" do
+      mig = Migration.build { todo 'foo' }; line_num = __LINE__
+      mig.todos.first.location.should == [__FILE__, line_num].join(':')
+    end
+  end
+
 end

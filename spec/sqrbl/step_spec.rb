@@ -32,5 +32,15 @@ describe Step do
     step.hello_world.should == "Hello, world!"
   end
 
-  it("should have a #todo method") { flunk }  # TODO: reuse shared behavior currently defined in group_spec.rb
+  describe "when #todo is called" do
+    it "should create a Todo object that saves the message" do
+      step = Step.new(@pair) { todo 'foo' }
+      step.todos.map(&:message).should == ['foo']
+    end
+
+    it "should create a Todo object that saves the location of the #todo call" do
+      step = Step.new(@pair) { todo 'foo' }; line_num = __LINE__
+      step.todos.first.location.should == [__FILE__, line_num].join(':')
+    end
+  end
 end
