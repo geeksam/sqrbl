@@ -4,6 +4,7 @@ module Sqrbl
 
     def initialize(migration, description, options = {}, &block)
       @todos       = []
+      @steps       = []
       @migration   = migration
       @description = description
       @block       = lambda(&block)
@@ -19,9 +20,17 @@ module Sqrbl
       todos << Todo.new(message, caller)
     end
 
+    def step(message, &block)
+      steps << StepPair.new(self, message, &block)
+    end
+
+    def valid?
+      !steps.empty? && steps.all? { |step| step.kind_of?(StepPair) }
+    end
+
     protected
     def evaluate_block!
-      instance_eval(&block)
+      instance_eval(&block) if block
     end
   end
 end

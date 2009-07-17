@@ -46,4 +46,25 @@ describe Group do
     end
   end
 
+  describe "when #step is called" do
+    it "should create a StepPair object and pass it the group, the description, and the block arg" do
+      test_self = self
+      group = Group.new(@mig, "foo") do
+        StepPair.should_receive(:new).with(self, 'do something').and_yield # Look weird?  See ./README.txt
+        step('do something') {}
+      end
+    end
+  end
+
+  describe :valid? do
+    it "should return false if steps is empty" do
+      group = Group.new(@mig, "foo") {}
+      group.should_not be_valid
+    end
+    it "should return true if steps is not empty" do
+      group = Group.new(@mig, "foo") { step("foo") {} }
+      group.should be_valid
+    end
+  end
+
 end
