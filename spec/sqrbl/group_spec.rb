@@ -31,4 +31,19 @@ describe Group do
     group.should respond_to(:hello_world)
     group.hello_world.should == "Hello, world!"
   end
+
+  describe "when #todo is called" do
+    it "should create a Todo object that saves the message" do
+      msg = 'Frobnicate the doohickey'
+      group = Group.new(@mig, "foo") { todo msg }
+      group.todos.map(&:message).should == [msg]
+    end
+
+    it "should create a Todo object that saves the location of the #todo call" do
+      msg = 'Frobnicate the doohickey'
+      group = Group.new(@mig, "foo") { todo msg }; expected_calling_line = __LINE__
+      group.todos.first.location.should == [__FILE__, expected_calling_line].join(':')
+    end
+  end
+
 end
