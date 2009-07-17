@@ -2,6 +2,10 @@ module Sqrbl
   class Group
     attr_reader :migration, :description, :block, :todos, :steps
 
+    include Sqrbl::ExpectsBlockWithNew
+    include Sqrbl::MethodMissingDelegation
+    delegate_method_missing_to :migration
+
     def initialize(migration, description, options = {}, &block)
       @todos       = []
       @steps       = []
@@ -9,11 +13,7 @@ module Sqrbl
       @description = description
       @block       = lambda(&block)
 
-      evaluate_block! unless options[:skip_block_evaluation]
-    end
-
-    def method_missing(method, *args, &block)
-      migration.send(method, *args, &block)
+      eval_block_on_initialize(options)
     end
 
     def todo(message)
@@ -26,11 +26,6 @@ module Sqrbl
 
     def valid?
       !steps.empty? && steps.all? { |step| step.kind_of?(StepPair) }
-    end
-
-    protected
-    def evaluate_block!
-      instance_eval(&block) if block
     end
   end
 end

@@ -49,7 +49,9 @@ module Sqrbl
 
 end  # module Sqrbl
 
+# TODO: figure out how to do autoload on const_missing
 Sqrbl.require_all_libs_relative_to(__FILE__, 'core_exts')
+Sqrbl.require_all_libs_relative_to(__FILE__, 'sqrbl/mixins')
 Sqrbl.require_all_libs_relative_to(__FILE__)
 
 # EOF

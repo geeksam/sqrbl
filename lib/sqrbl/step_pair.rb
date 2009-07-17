@@ -3,16 +3,16 @@ module Sqrbl
     attr_reader :group, :description, :block
     attr_reader :up_step, :down_step
 
+    include Sqrbl::ExpectsBlockWithNew
+    include Sqrbl::MethodMissingDelegation
+    delegate_method_missing_to :group
+
     def initialize(group, description, options = {}, &block)
       @group       = group
       @description = description
       @block       = lambda(&block)
 
-      evaluate_block! unless options[:skip_block_evaluation]
-    end
-
-    def method_missing(method, *args, &block)
-      group.send(method, *args, &block)
+      eval_block_on_initialize(options)
     end
 
     def up(&block)
@@ -24,11 +24,6 @@ module Sqrbl
 
     def valid?
       [up_step, down_step].all? { |step| step.kind_of?(Step) }
-    end
-
-    protected
-    def evaluate_block!
-      instance_eval(&block) if block
     end
   end
 end
