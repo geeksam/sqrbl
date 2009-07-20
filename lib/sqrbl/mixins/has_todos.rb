@@ -6,7 +6,8 @@ module Sqrbl
   module HasTodos
     Todo = Struct.new(:message, :call_stack) do
       def location
-        call_stack.first
+        # Find the first caller that isn't inside this library
+        call_stack.detect { |call| !call.include?(Sqrbl::LIBPATH) }
       end
     end
 
