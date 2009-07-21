@@ -59,7 +59,7 @@ describe Step do
     it "should prepend its argument with '-- ' and put it in #output" do
       message = "Here's something you should probably be aware of."
       step = Step.new(@pair) { comment(message) }
-      step.output.should == '-- ' + message + "\n"
+      step.output.should =~ Regexp.new('^-- ' + message)
     end
   end
 
@@ -67,11 +67,9 @@ describe Step do
     it "should surround its argument with /* and */ on newlines and put the whole thing in #output" do
       message = "Here's something you should probably be aware of."
       step = Step.new(@pair) { block_comment(message) }
-      step.output.should == <<EOF
-/*
-    #{message}
-*/
-EOF
+      step.output.should =~ /^\/\*/
+      step.output.should =~ Regexp.new('^    ' + message)
+      step.output.should =~ /^\*\//
     end
 
     describe "and given a string with extra spaces (as, e.g., a heredoc)" do

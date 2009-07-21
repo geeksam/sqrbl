@@ -42,7 +42,7 @@ module Sqrbl
 
     protected
     def write(text)
-      output << text + "\n"
+      output << text + "\n\n"
     end
 
     def indent(n, text)
