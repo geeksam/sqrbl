@@ -16,7 +16,9 @@ module Sqrbl
     end
 
     def todo(message)
-      todos << Todo.new(message, caller)
+      returning Todo.new(message, caller) do |new_todo|
+        todos << new_todo
+      end
     end
   end
 end
