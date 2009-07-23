@@ -11,6 +11,21 @@ module Sqrbl
     delegate_method_missing_to :step_pair
     include HasTodos
 
+    GiantWarningText = <<-EOF
+##     ##    ###    #######   ##    ##  ######  ##    ##    #####    ##
+##     ##   ## ##   ##    ##  ###   ##    ##    ###   ##   ##   ##   ##
+##     ##  ##   ##  ##    ##  ####  ##    ##    ####  ##  ##         ##
+##  #  ##  #######  #######   ## ## ##    ##    ## ## ##  ##   ####  ##
+## ### ##  ##   ##  ##  ##    ##  ####    ##    ##  ####  ##     ##  ##
+#### ####  ##   ##  ##   ##   ##   ###    ##    ##   ###   ##   ##
+###   ###  ##   ##  ##    ##  ##    ##  ######  ##    ##    #####    ##
+EOF
+    GiantWarningSeparator = '#' * GiantWarningText.split(/\n/).map(&:length).max
+    GiantWarningTemplate =  "\n" + GiantWarningSeparator + "\n" +
+                            "\n" + GiantWarningText      +
+                            "\n" + GiantWarningSeparator + "\n[[LineNum]]\n[[Message]]" +
+                            "\n" + GiantWarningSeparator
+
     def initialize(step_pair, options = {}, &block)
       @output    = ''
       @step_pair = step_pair
@@ -21,9 +36,16 @@ module Sqrbl
 
     def todo(message)
       returning(super) do |todo|
-        calling_file, calling_line = todo.location.split(':')
-        todo_msg = "--> TODO (#{calling_file}, line #{calling_line}):\t#{message}"
+        todo_msg = "--> TODO #{caller_info(todo)}:\t#{todo.message}"
         write todo_msg
+      end
+    end
+
+    def warning(message)
+      returning(super) do |warn|
+        giant_warning = GiantWarningTemplate.gsub('[[LineNum]]', caller_info(warn)) \
+                                            .gsub('[[Message]]', warn.message)
+        write giant_warning
       end
     end
 
@@ -32,12 +54,12 @@ module Sqrbl
     end
 
     def block_comment(message)
-      write "/*\n%s\n*/" % indent(4, strip_extra_indentation(message))
+      write "/*\n%s\n*/" % indent(4, unindent(message))
     end
 
-    def action(message, &block)
+    def action(message, &block_returning_string)
       comment(message)
-      write(strip_extra_indentation(yield))
+      write(unindent(yield))
     end
 
     def insert_into(table_name, map_from_fieldname_to_expr = {})
@@ -52,16 +74,20 @@ module Sqrbl
       insert_clause + select_clause
     end
 
-    protected
     def write(text)
       output << text + "\n\n"
+    end
+
+    protected
+    def caller_info(todo)
+      "(#{todo.calling_file}, line #{todo.calling_line})"
     end
 
     def indent(n, text)
       text.to_s.gsub(/^(.)/, (' ' * n) + '\1')
     end
 
-    def strip_extra_indentation(text)
+    def unindent(text)
       return text unless text =~ /^(\s+)/
       text.gsub(Regexp.new("^" + $1), '')
     end

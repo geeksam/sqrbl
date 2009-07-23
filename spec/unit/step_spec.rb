@@ -48,6 +48,7 @@ describe Step do
       step = Step.new(@pair) do
         todo 'Fix a terrible issue'; line_num = __LINE__
       end
+
       step.output.should =~ /^--> TODO /
       step.output.should include(__FILE__)
       step.output.should =~ Regexp.new("line #{line_num}")
@@ -81,6 +82,25 @@ describe Step do
         end
         step.output.should =~ /^    Foo./
       end
+    end
+  end
+
+  describe "when #warning is called" do
+    it "should create a Todo object with type=:warning that saves the message" do
+      step = Step.new(@pair) { warning 'Danger, Will Robinson!' }
+      step.todos.map(&:type).should == [:warning]
+      step.todos.map(&:message).should == ['Danger, Will Robinson!']
+    end
+
+    it "should write a giant ASCII warning to #output" do
+      line_num = 0
+      step = Step.new(@pair) do
+        warning 'Danger, Will Robinson!'; line_num = __LINE__
+      end
+      step.output.should include(Step::GiantWarningSeparator)
+      step.output.should include(Step::GiantWarningText)
+      step.output.should include('Danger, Will Robinson!')
+      step.output.should =~ Regexp.new("line #{line_num}")
     end
   end
 
@@ -120,7 +140,6 @@ describe Step do
       insert_fragment.should =~ /^\s*part_num/
       insert_fragment.should =~ /^\s*note/
 
-      puts '<pre>%s</pre>' % @step.output
       insert_fragment.should include('widget_name AS name')
       insert_fragment.should include('CONCAT("X_", part_number) AS part_num')
       insert_fragment.should include('"Imported from old_widgets" AS note')
