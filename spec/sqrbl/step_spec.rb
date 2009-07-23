@@ -103,4 +103,27 @@ describe Step do
       @step.output.should =~ /^Hello world!/
     end
   end
+
+  describe "#insert_into" do
+    it "should produce an INSERT INTO fragment" do
+      @step = Step.new(@pair) {}
+      insert_fragment = @step.insert_into 'new_widgets', {
+        :name     => 'widget_name',
+        :part_num => 'CONCAT("X_", part_number)',
+        :note     => '"Imported from old_widgets"',
+      }
+      # puts '<pre>%s</pre>' % insert_fragment
+
+      insert_fragment.should include('new_widgets')
+
+      insert_fragment.should =~ /^\s*name/
+      insert_fragment.should =~ /^\s*part_num/
+      insert_fragment.should =~ /^\s*note/
+
+      puts '<pre>%s</pre>' % @step.output
+      insert_fragment.should include('widget_name AS name')
+      insert_fragment.should include('CONCAT("X_", part_number) AS part_num')
+      insert_fragment.should include('"Imported from old_widgets" AS note')
+    end
+  end
 end

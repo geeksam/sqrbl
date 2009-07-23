@@ -40,13 +40,25 @@ module Sqrbl
       write(strip_extra_indentation(yield))
     end
 
+    def insert_into(table_name, map_from_fieldname_to_expr = {})
+      # Build the "INSERT INTO (foo, bar, baz)" clause
+      insert_fields = map_from_fieldname_to_expr.keys.join(",\n")
+      insert_clause = "INSERT INTO %s (\n%s\n)\n" % [table_name, indent(4, insert_fields)]
+
+      # Build the "SELECT FROM" clause
+      select_fields = map_from_fieldname_to_expr.map { |field_name, expr| "#{expr} AS #{field_name}" }.join(",\n")
+      select_clause = "SELECT\n" + indent(4, select_fields)
+
+      insert_clause + select_clause
+    end
+
     protected
     def write(text)
       output << text + "\n\n"
     end
 
     def indent(n, text)
-      text.gsub(/^(.)/, (' ' * n) + '\1')
+      text.to_s.gsub(/^(.)/, (' ' * n) + '\1')
     end
 
     def strip_extra_indentation(text)
