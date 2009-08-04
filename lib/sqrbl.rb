@@ -46,9 +46,29 @@ module Sqrbl
     Dir.glob(search_me).sort.each {|rb| require rb}
   end
 
-  # Convenience method:  Calls Sqrbl::Migration.build and passes it the given block.
+  # Convenience method:  builds and writes a migration in one go.
   def self.migration(&block)
+    returning(build_migration(&block)) do |mig|
+      write_migration!(mig)
+    end
+  end
+
+  # Convenience method:  Calls Sqrbl::Migration.build and passes it the given block.
+  def self.build_migration(&block)
     Sqrbl::Migration.build(&block)
+  end
+
+  # Convenience method:  Write a Migration using all subclasses of BaseMigrationWriter.
+  def self.write_migration!(migration)
+    BaseMigrationWriter.subclasses.each do |writer_class|
+      writer_class.write_migration!(migration)
+    end
+  end
+
+  # Returns the string, in lower case, with whitespace converted to underscores
+  # and all non-alphanumeric characters removed.
+  def self.calculate_unix_name(string)
+    string.gsub(/\s+/, '_').downcase.gsub(/[^a-z0-9_]/, '')
   end
 
 end  # module Sqrbl

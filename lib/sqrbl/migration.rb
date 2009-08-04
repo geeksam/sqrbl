@@ -12,7 +12,7 @@ module Sqrbl
   # available to all groups (and their related objects) that belong to a
   # Migration instance.  For more information, see MethodMissingDelegation.
   class Migration
-    attr_reader :groups
+    attr_reader :groups, :creating_file, :output_directory
 
     include HasTodos
 
@@ -28,8 +28,15 @@ module Sqrbl
       end
     end
 
-    def initialize
+    def initialize # :nodoc:
       @groups = []
+      creating_caller = CallStack.first_non_sqrbl_caller
+      @creating_file  = File.expand_path(CallStack.caller_file(creating_caller))
+    end
+
+    # Convenience method:  set the +output_directory+ attribute
+    def set_output_directory(dirname)
+      self.output_directory = File.expand_path(dirname)
     end
 
     # Creates a Group object, passing it the name and block arguments.

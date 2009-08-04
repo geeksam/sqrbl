@@ -21,12 +21,12 @@ module Sqrbl
 
       # Return just the line number from +location+.
       def calling_line
-        location.split(':').last
+        CallStack.caller_line(location)
       end
 
       # Return just the filename from +location+.
-      def calling_file
-        location.split(':').first
+      def creating_file
+        CallStack.caller_file(location)
       end
 
       # Is this Todo of type <tt>:todo</tt>?

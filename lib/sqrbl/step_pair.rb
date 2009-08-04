@@ -48,5 +48,9 @@ module Sqrbl
     def valid?
       [up_step, down_step].all? { |step| step.kind_of?(Step) }
     end
+
+    def unix_name
+      Sqrbl.calculate_unix_name(description)
+    end
   end
 end

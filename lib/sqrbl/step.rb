@@ -169,7 +169,7 @@ EOF
     protected
     # Format caller information from the Todo for output.
     def caller_info(todo)
-      "(#{todo.calling_file}, line #{todo.calling_line})"
+      "(#{todo.creating_file}, line #{todo.calling_line})"
     end
 
     # Indents +text+ by +n+ spaces.

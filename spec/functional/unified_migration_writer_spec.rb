@@ -3,18 +3,25 @@ require File.join(File.dirname(__FILE__), %w[.. spec_helper])
 include Sqrbl
 
 describe UnifiedMigrationWriter do
-  describe "for a migration with two groups and three steps" do
-    # Stub out the various things that the writer does.
-    # Call this after defining the mocks you care about (because mocks created first take precedence),
-    # and calling UnifiedMigrationWriter#write! shouldn't actually touch the filesystem.
-    def stub_out_file_creation
-      File.should_receive(:directory?).with(@base_dir).any_number_of_times.and_return(true)
-      FileUtils.should_receive(:makedirs).with(@base_dir).any_number_of_times
-      File.should_receive(:open).with(any_args).any_number_of_times.and_return(mock('File'))
+  describe "for a migration with #output_directory set" do
+    it "should set #output_directory from the migration's #output_directory" do
+      mig = mock('Migration', :output_directory => '/path/to/sql', :creating_file => nil)
+      writer = UnifiedMigrationWriter.new(mig)
+      writer.output_directory.should == mig.output_directory
     end
+  end
 
+  describe "for a migration with output_directory blank" do
+    it "should set #output_directory using the dirname of the migration's #creating_file, plus /sql" do
+      mig = mock('Migration', :output_directory => nil, :creating_file => '/path/to/some/sqrbl_file.rb')
+      writer = UnifiedMigrationWriter.new(mig)
+      writer.output_directory.should == '/path/to/some/sql'
+    end
+  end
+
+  describe "for a migration with two groups and three steps" do
     before(:each) do
-      @mig = Sqrbl.migration do
+      @mig = Sqrbl.build_migration do
         group 'Group one' do
           step 'Step one' do
             up   { write 'Step one up'   }
@@ -34,16 +41,12 @@ describe UnifiedMigrationWriter do
       end
 
       @base_dir = File.expand_path(File.join(File.dirname(__FILE__), 'sql'))
-      @writer = UnifiedMigrationWriter.new(@mig, @base_dir)
-    end
-
-    it "should have a target_directory attribute" do
-      @writer.target_directory.should == @base_dir
+      @writer = UnifiedMigrationWriter.new(@mig)
     end
 
     it "should not create the target directory if it already exists" do
       File.should_receive(:directory?).with(@base_dir).and_return(true)
-      FileUtils.should_not_receive(:makedirs)
+      FileUtils.should_not_receive(:makedirs).with(@base_dir)
       stub_out_file_creation
       @writer.write!
     end

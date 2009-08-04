@@ -102,4 +102,9 @@ describe StepPair do
       pair.todos.first.location.should == [__FILE__, line_num].join(':')
     end
   end
+
+  it "should have a unix_name property that consists of the regular name with characters sanitized" do
+    pair = StepPair.new(@group, "This be a test, matey!  ARRR!!") {}
+    pair.unix_name.should == 'this_be_a_test_matey_arrr'
+  end
 end

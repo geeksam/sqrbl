@@ -77,4 +77,9 @@ describe Group do
     end
   end
 
+  it "should have a unix_name property that consists of the regular name with characters sanitized" do
+    group = Group.new(@mig, "This be a test, matey!  ARRR!!") {}
+    group.unix_name.should == 'this_be_a_test_matey_arrr'
+  end
+
 end

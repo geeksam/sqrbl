@@ -1,20 +1,22 @@
 == SQrbL:  Making database migrations suck less since July 2009!
 
-    Copyright (c) 2009 raSANTIAGO + Associates LLC
-    http://www.rasantiago.com/
-    http://github.com/rasantiago/
-    
-    (SQrbL's primary author is Sam Livingston-Gray.)
+Copyright (c) 2009 raSANTIAGO + Associates LLC (http://www.rasantiago.com)
+
+The source code for SQrbL can be found on GitHub at:
+1. http://github.com/rasantiago/sqrbl/
+2. http://github.com/geeksam/sqrbl/
+
+SQrbL's creator and primary author is Sam Livingston-Gray.
     
 == DESCRIPTION:
 
 SQrbL was created to help manage an extremely specific problem:  managing SQL-based database migrations.
 
-In essence, SQrbL is a tool for managing multiple SQL queries using Ruby.  SQrbL borrows some language from ActiveRecord's schema migrations, but where ActiveRecord manages changes to your database schema over time, SQrbL was written to manage the process of transforming your data from one schema to another.  (Of course, if you want to use SQrbL to write your DDL, you could -- but ActiveRecord probably has better tools for that.)
+In essence, SQrbL is a tool for managing multiple SQL queries using Ruby.  SQrbL borrows some terminology and ideas from ActiveRecord's schema migrations, but where ActiveRecord manages changes to your database schema over time, SQrbL was written to manage the process of transforming your data from one schema to another.  (Of course, you could use SQrbL for the former case as well -- just use it to write DDL queries -- but ActiveRecord has better tools for figuring out which migrations have already been applied.)
 
 ===How It Works:
 
-You describe the steps in your migration in a SQrbL file.  Each step can produce as much or as little SQL as you like.  Each step has an "up" and a "down" part -- so you can do and undo each step as many times as you need to, until you get it just right.  When you run your SQrbL file, it creates a tree of *.sql files containing the output from your migration steps, one file per step.  It also creates the combined files "all_up.sql" and "all_down.sql"; these contain all of your steps combined into one giant file so that, when Cutover Day arrives, you can run the whole shebang in one go.
+You describe the steps in your migration in a SQrbL file.  Each step can produce as much or as little SQL as you like.  Each step has an "up" and a "down" part -- so you can do and undo each step as many times as you need to, until you get it just right.  When you run your SQrbL file, it creates a tree of *.sql files containing the output from your migration steps, one file per step.  It also creates the combined files "all_up.sql" and "all_down.sql"; these contain all of your steps combined into one giant file so that, when Cutover Day arrives, you can copy/paste the whole thing into your SQL client and run it all at once.
 
 ===Why It Exists:
 
@@ -29,6 +31,8 @@ SQL.rb seemed a bit too pretentious, so I went with SQrbL -- as in, "You got Rub
 <i>(Note that, in the following code sample, I'm using the convention that do/end blocks are used primarily for their side effects, and curly-brace blocks are used primarily for their return value.)</i>
 
   Sqrbl.migration "Convert from old widgets to new widgets" do
+    set_output_directory '/path/to/generated/sql'
+
     group "Widgets" do
       step "Create widgets" do
         up do
@@ -55,7 +59,7 @@ SQL.rb seemed a bit too pretentious, so I went with SQrbL -- as in, "You got Rub
     end
   end
 
-The above code sample describes a migration with one step:  migrating the data in an `old_widgets` table to a `new_widgets` table.
+The above code sample describes a migration with one step:  migrating the data in an `old_widgets` table to a `new_widgets` table.  When run, this will generate a set of *.sql files in the directory /path/to/generated/sql.
 
 == REQUIREMENTS:
 

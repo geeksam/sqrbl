@@ -3,7 +3,19 @@ require File.join(File.dirname(__FILE__), %w[.. spec_helper])
 include Sqrbl
 
 describe Migration do
+  describe "A new migration" do
+    it "should know the file that created it" do
+      mig = Migration.new
+      mig.creating_file.should == File.expand_path(__FILE__)
+    end
+  end
+
   describe "A migration built with Migration.build" do
+    it "should still know the file that created it" do
+      mig = Migration.build {}
+      mig.creating_file.should == File.expand_path(__FILE__)
+    end
+
     describe "when the block calls #group once" do
       it "should have one group with the proper description" do
         mig = Migration.build do
@@ -53,5 +65,4 @@ describe Migration do
       mig.todos.first.location.should == [__FILE__, line_num].join(':')
     end
   end
-
 end

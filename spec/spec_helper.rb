@@ -18,4 +18,14 @@ Spec::Runner.configure do |config|
   # config.mock_with :rr
 end
 
+
+# Stub out the various things that the migration writers do.
+# Call this after defining the mocks you care about (because mocks created first take precedence).
+# Then, calling #write! shouldn't actually touch the filesystem.
+def stub_out_file_creation
+  File     .should_receive(:directory?).with(any_args).any_number_of_times.and_return(true)
+  FileUtils.should_receive(:makedirs)  .with(any_args).any_number_of_times
+  File     .should_receive(:open)      .with(any_args).any_number_of_times.and_return(mock('File'))
+end
+
 # EOF
