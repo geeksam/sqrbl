@@ -59,8 +59,20 @@ describe Group do
       group = Group.new(@mig, "foo") {}
       group.should_not be_valid
     end
-    it "should return true if steps is not empty" do
+
+    it "should return false if steps is not empty, but any step is invalid" do
       group = Group.new(@mig, "foo") { step("foo") {} }
+      group.steps.map(&:valid?).should include(false)
+      group.should_not be_valid
+    end
+
+    it "should return true if steps is not empty, and all steps are themselves valid" do
+      group = Group.new(@mig, "foo") do
+        step("foo") do
+          up {}
+          down {}
+        end
+      end
       group.should be_valid
     end
   end

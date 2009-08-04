@@ -30,9 +30,9 @@ module Sqrbl
       steps << StepPair.new(self, step_description, &block)
     end
 
-    # A Group is valid if it contains at least one StepPair object.
+    # A Group is valid if it contains at least one StepPair object, and all of those objects are themselves valid.
     def valid?
-      !steps.empty? && steps.all? { |step| step.kind_of?(StepPair) }
+      !steps.empty? && steps.all? { |step| step.kind_of?(StepPair) && step.valid? }
     end
   end
 end
