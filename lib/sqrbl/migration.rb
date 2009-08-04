@@ -36,5 +36,20 @@ module Sqrbl
     def group(name, &block)
       groups << Group.new(self, name, &block)
     end
+
+    # Convenience method:  iterate all StepPair objects in the migration
+    def step_pairs
+      groups.map(&:steps).flatten
+    end
+
+    # Convenience method:  iterate all 'up' steps in the migration
+    def up_steps
+      step_pairs.map(&:up_step)
+    end
+
+    # Convenience method:  iterate all 'down' steps in the migration
+    def down_steps
+      step_pairs.map(&:down_step)
+    end
   end
 end
