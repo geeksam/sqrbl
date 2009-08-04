@@ -1,4 +1,4 @@
-== SQrbL:  Making data migrations suck less since July 2009!
+== SQrbL:  Making database migrations suck less since July 2009!
 
     Copyright (c) 2009 raSANTIAGO + Associates LLC
     http://www.rasantiago.com/
@@ -12,15 +12,21 @@ SQrbL was created to help manage an extremely specific problem:  managing SQL-ba
 
 In essence, SQrbL is a tool for managing multiple SQL queries using Ruby.  SQrbL borrows some language from ActiveRecord's schema migrations, but where ActiveRecord manages changes to your database schema over time, SQrbL was written to manage the process of transforming your data from one schema to another.  (Of course, if you want to use SQrbL to write your DDL, you could -- but ActiveRecord probably has better tools for that.)
 
-HOW IT WORKS:  You describe the steps in your migration in a SQrbL file.  Each step can produce as much or as little SQL as you like.  Each step has an "up" and a "down" part -- so you can do and undo each step as many times as you need to, until you get it just right.  When you run your SQrbL file, it creates individual files containing the output from your migration steps.  It also creates the combined files "all_up.sql" and "all_down.sql"; these contain all of your steps combined into one giant file so that, when Cutover Day arrives, you can run the whole shebang in one go.
+===How It Works:
 
-WHY IT EXISTS:  SQL is a fantastic DSL for describing queries.  It's not bad at doing transformations, either.  Unfortunately, SQL is, um... rather verbose.  And, it lacks tools for reducing duplication -- if you have to run five similar queries that differ only in their parameters, you have to figure out how to use a prepared statement, but if you have to run five similar queries that differ in the field names they use, that's a bit more work.  SQrbL lets you use SQL for the things SQL is good at, and Ruby for the things that SQL isn't good at.
+You describe the steps in your migration in a SQrbL file.  Each step can produce as much or as little SQL as you like.  Each step has an "up" and a "down" part -- so you can do and undo each step as many times as you need to, until you get it just right.  When you run your SQrbL file, it creates a tree of *.sql files containing the output from your migration steps, one file per step.  It also creates the combined files "all_up.sql" and "all_down.sql"; these contain all of your steps combined into one giant file so that, when Cutover Day arrives, you can run the whole shebang in one go.
 
-== FEATURES/PROBLEMS:
+===Why It Exists:
 
-* FIXME (list of features or problems)
+SQL is a fantastic DSL for describing queries.  It's not bad at doing transformations, either.  Unfortunately, SQL is, um... rather verbose.  And, it lacks tools for reducing duplication -- if you have to run five similar queries that differ only in their parameters, you have to figure out how to use a prepared statement, but if you have to run five similar queries that differ in the field names they use, that's a bit more work.  SQrbL lets you use SQL for the things SQL is good at, and Ruby for the other stuff.
+
+===About the Name:
+
+SQL.rb seemed a bit too pretentious, so I went with SQrbL -- as in, "You got Ruby in my SQL."  I pronounce it "squirble" (rhymes with "squirrel").  The proper capitalization can be annoying to type, so I've aliased the SQrbL class as Sqrbl.
 
 == SYNOPSIS:
+
+<i>(Note that, in the following code sample, I'm using the convention that do/end blocks are used primarily for their side effects, and curly-brace blocks are used primarily for their return value.)</i>
 
   Sqrbl.migration "Convert from old widgets to new widgets" do
     group "Widgets" do
@@ -49,13 +55,15 @@ WHY IT EXISTS:  SQL is a fantastic DSL for describing queries.  It's not bad at 
     end
   end
 
+The above code sample describes a migration with one step:  migrating the data in an `old_widgets` table to a `new_widgets` table.
+
 == REQUIREMENTS:
 
 * FIXME (list of requirements)
 
 == INSTALL:
 
-* sudo gem install rasantiago-sqrbl --source http://gems.github.com
+  sudo gem install rasantiago-sqrbl --source http://gems.github.com
 
 == LICENSE:
 

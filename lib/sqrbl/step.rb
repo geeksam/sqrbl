@@ -48,6 +48,7 @@ EOF
         write giant_warning
       end
     end
+    alias :danger_will_robinson! :warning
 
     def comment(message)
       write '-- ' + message
