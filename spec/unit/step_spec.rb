@@ -43,13 +43,13 @@ describe Step do
       step.todos.first.location.should == [__FILE__, line_num].join(':')
     end
 
-    it "should prepend its argument with '--> TODO ([file], line [line #]):' and put it in #output" do
+    it "should prepend its argument with '--> todo ([file], line [line #]):' and put it in #output" do
       line_num = 0
       step = Step.new(@pair) do
         todo 'Fix a terrible issue'; line_num = __LINE__
       end
 
-      step.output.should =~ /^--> TODO /
+      step.output.should =~ /^--> todo \(.*\)\:/i
       step.output.should include(__FILE__)
       step.output.should =~ Regexp.new("line #{line_num}")
       step.output.should include('Fix a terrible issue')
@@ -78,9 +78,13 @@ describe Step do
         step = Step.new(@pair) do
           block_comment <<-EOF
             Foo.
+            Bar.
+            Baz.
           EOF
         end
         step.output.should =~ /^    Foo./
+        step.output.should =~ /^    Bar./
+        step.output.should =~ /^    Baz./
       end
     end
   end

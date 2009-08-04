@@ -3,6 +3,11 @@
 
 
 module Sqrbl
+  # Like the Migration class, Group doesn't do much on its own.
+  # It's basically a container for a list of StepPair objects, which are created using #step.
+  #
+  # Group delegates +method_missing+ calls to its +migration+ object.
+  # For more information, see MethodMissingDelegation.
   class Group
     attr_reader :migration, :description, :block, :steps
 
@@ -12,19 +17,20 @@ module Sqrbl
     include HasTodos
 
     def initialize(migration, description, options = {}, &block)
-      @todos       = []
-      @steps       = []
       @migration   = migration
       @description = description
       @block       = lambda(&block)
+      @steps       = []
 
       eval_block_on_initialize(options)
     end
 
-    def step(message, &block)
-      steps << StepPair.new(self, message, &block)
+    # Creates a StepPair object, passing it the step_description and block arguments.
+    def step(step_description, &block)
+      steps << StepPair.new(self, step_description, &block)
     end
 
+    # A Group is valid if it contains at least one StepPair object.
     def valid?
       !steps.empty? && steps.all? { |step| step.kind_of?(StepPair) }
     end
