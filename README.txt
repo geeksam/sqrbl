@@ -63,7 +63,7 @@ The above code sample describes a migration with one step:  migrating the data i
 
 == REQUIREMENTS:
 
-* FIXME (list of requirements)
+* Ruby.  (SQrbL was written using MRI Ruby 1.8.6, and has not been tested using other versions.)
 
 == INSTALL:
 
