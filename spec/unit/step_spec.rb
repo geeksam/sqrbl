@@ -67,7 +67,7 @@ describe Step do
   describe "when #block_comment is called" do
     it "should surround its argument with /* and */ on newlines and put the whole thing in #output" do
       message = "Here's something you should probably be aware of."
-      step = Step.new(@pair) { block_comment(message) }
+      step = Step.new(@pair) { block_comment { message } }
       step.output.should =~ /^\/\*/
       step.output.should =~ Regexp.new('^    ' + message)
       step.output.should =~ /^\*\//
@@ -76,11 +76,13 @@ describe Step do
     describe "and given a string with extra spaces (as, e.g., a heredoc)" do
       it "should unindent the argument before putting it in #output" do
         step = Step.new(@pair) do
-          block_comment <<-EOF
-            Foo.
-            Bar.
-            Baz.
-          EOF
+          block_comment do 
+            <<-EOF
+              Foo.
+              Bar.
+              Baz.
+            EOF
+          end
         end
         step.output.should =~ /^    Foo./
         step.output.should =~ /^    Bar./

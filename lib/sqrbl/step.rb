@@ -112,8 +112,8 @@ EOF
     end
 
     # Outputs a message surrounded by /* SQL block-comment delimiters */.
-    def block_comment(message)
-      write "/*\n%s\n*/" % indent(4, unindent(message))
+    def block_comment(&block_returning_string)
+      write "/*\n%s\n*/" % indent(4, unindent(yield))
     end
 
     # Expects a message and a block whose return value is a string.
