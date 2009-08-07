@@ -32,6 +32,18 @@ describe Step do
     step.hello_world.should == "Hello, world!"
   end
 
+  it "methods defined in a #helpers block should become available as methods on the Step instance" do
+    step = Step.new(@pair) do
+      helpers do
+        def hello_world
+          "Hello, world!"
+        end
+      end
+    end
+    step.should respond_to(:hello_world)
+    step.hello_world.should == "Hello, world!"
+  end
+
   describe "when #todo is called" do
     it "should create a Todo object that saves the message" do
       step = Step.new(@pair) { todo 'foo' }

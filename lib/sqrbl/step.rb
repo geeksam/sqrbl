@@ -54,6 +54,13 @@ EOF
       eval_block_on_initialize(options)
     end
 
+    # This method is purely cosmetic.  If you want to define a number
+    # of helpers and use your editor's code-folding features to
+    # collapse them all together, define them in a +helper+ block.
+    def helpers(&block)
+      yield
+    end
+
     # Writes a commented-out Todo item to +output+.
     #
     # Also, creates a Todo object that may be used to create console

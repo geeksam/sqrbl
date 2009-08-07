@@ -1,4 +1,11 @@
-== 1.0.0 / 2009-07-16
+== 0.1.3 / 2009-08-07
 
-* 1 major enhancement
-  * Birthday!
+* Added Step#helpers method for code cosmetics.
+
+== 0.1.2 / 2009-08-06
+
+* No changes -- just want to make sure the latest release is actually usable after flailing around trying to use the 'bones' and 'rubyforge' gems.
+
+== 0.1.0 / 2009-08-06
+
+* Ready for public consumption?

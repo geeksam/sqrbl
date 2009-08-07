@@ -33,6 +33,12 @@ SQL.rb seemed a bit too pretentious, so I went with SQrbL -- as in, "You got Rub
   Sqrbl.migration "Convert from old widgets to new widgets" do
     set_output_directory '/path/to/generated/sql'
 
+    helpers do
+      def widget_import_note
+        '"Imported from old_widgets"'
+      end
+    end
+
     group "Widgets" do
       step "Create widgets" do
         up do
@@ -42,7 +48,7 @@ SQL.rb seemed a bit too pretentious, so I went with SQrbL -- as in, "You got Rub
                 insert_into("new_widgets", {
                   :name     => 'widget_name',
                   :part_num => 'CONCAT("X_", part_number)',
-                  :note     => '"Imported from old_widgets"',
+                  :note     => widget_import_note,
                 })
               }
               FROM old_widgets
