@@ -1,0 +1,11 @@
+- bin/sqrbl should create an empty SQrbL file with the following simple template:
+    require 'rubygems'
+    require 'sqrbl'
+    Sqrbl.migration do
+      # (copy the rest from README.txt)
+    end
+
+- Writers should create some sort of output to let you know that something happened.
+
+- Define #helper(&block) as a simple wrapper to instance_eval on the same object.  (Purpose:  allow you to define helpers in a block that can be code-folded.)
+
