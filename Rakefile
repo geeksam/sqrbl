@@ -18,13 +18,14 @@ require 'sqrbl'
 
 task :default => 'spec:run'
 
-PROJ.name = 'sqrbl'
-PROJ.authors = 'Sam Livingston-Gray'
-PROJ.email = 'geeksam@gmail.com'
-PROJ.url = '' # FIXME (project homepage)
-PROJ.version = Sqrbl::VERSION
 PROJ.rubyforge.name = 'sqrbl'
-PROJ.ignore_file = '.gitignore'
+PROJ.name           = 'sqrbl'
+PROJ.version        = Sqrbl::VERSION
+PROJ.authors        = 'Sam Livingston-Gray'
+PROJ.email          = 'geeksam@gmail.com'
+PROJ.url            = 'http://sqrbl.rubyforge.org'
+PROJ.ignore_file    = '.gitignore'
+
 
 PROJ.spec.opts << '--color'
 
