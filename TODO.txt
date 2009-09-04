@@ -1,3 +1,7 @@
+- Change verbiage: "conversion" instead of "migration".
+
+- Writers should create some sort of output to let you know that something happened.
+
 - bin/sqrbl should create an empty SQrbL file with the following simple template:
     require 'rubygems'
     require 'sqrbl'
@@ -5,5 +9,4 @@
       # (copy the rest from README.txt)
     end
 
-- Writers should create some sort of output to let you know that something happened.
-
+- Add some string-munging for pluralize(n, thing, things), and possibly move #unix_name into the string-munging module.
