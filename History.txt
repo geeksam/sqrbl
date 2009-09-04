@@ -1,10 +1,29 @@
+== 0.2.0 / 2009-09-03
+
+* API change: switch to using the word "conversion" instead of
+  "migration" throughout the library.  While this was mostly a
+  find-and-replace job, I'm bumping the version number to indicate the
+  API breakage.
+
+  I'd found that using the word "migration" got people thinking in terms
+  of ActiveRecord, which isn't quite the intended purpose of this
+  library.  SQrbL was written to manage the process of doing one-off
+  database conversions in a repeatable way.
+
+  (At raSANTIAGO, I helped a few organizations switch from other
+  programs to CiviCRM, and I wrote SQrbL to help me keep track of all
+  the various steps involved in importing their legacy
+  constituent-management data to CiviCRM.)
+
 == 0.1.3 / 2009-08-07
 
 * Added Step#helpers method for code cosmetics.
 
 == 0.1.2 / 2009-08-06
 
-* No changes -- just want to make sure the latest release is actually usable after flailing around trying to use the 'bones' and 'rubyforge' gems.
+* No changes -- just want to make sure the latest release is actually
+  usable after flailing around trying to use the 'bones' and 'rubyforge'
+  gems.
 
 == 0.1.0 / 2009-08-06
 

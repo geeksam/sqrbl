@@ -3,21 +3,21 @@
 
 
 module Sqrbl
-  # Like the Migration class, Group doesn't do much on its own.
+  # Like the Conversion class, Group doesn't do much on its own.
   # It's basically a container for a list of StepPair objects, which are created using #step.
   #
-  # Group delegates +method_missing+ calls to its +migration+ object.
+  # Group delegates +method_missing+ calls to its +conversion+ object.
   # For more information, see MethodMissingDelegation.
   class Group
-    attr_reader :migration, :description, :block, :steps
+    attr_reader :conversion, :description, :block, :steps
 
     include Sqrbl::ExpectsBlockWithNew
     include Sqrbl::MethodMissingDelegation
-    delegate_method_missing_to :migration
+    delegate_method_missing_to :conversion
     include HasTodos
 
-    def initialize(migration, description, options = {}, &block)
-      @migration   = migration
+    def initialize(conversion, description, options = {}, &block)
+      @conversion   = conversion
       @description = description
       @block       = lambda(&block)
       @steps       = []

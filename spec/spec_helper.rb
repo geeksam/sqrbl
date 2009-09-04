@@ -19,7 +19,7 @@ Spec::Runner.configure do |config|
 end
 
 
-# Stub out the various things that the migration writers do.
+# Stub out the various things that the conversion writers do.
 # Call this after defining the mocks you care about (because mocks created first take precedence).
 # Then, calling #write! shouldn't actually touch the filesystem.
 def stub_out_file_creation

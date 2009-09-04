@@ -7,7 +7,7 @@ module Sqrbl
   # references to one another.  The graph will have the following general shape
   # (where --> indicates a relationship that is generally one-to-many):
   #
-  # Migration --> Group --> StepPair --> Step
+  # Conversion --> Group --> StepPair --> Step
   #
   # Also, because these various objects are created with blocks that are
   # instance_eval'd, those blocks can define helper methods that will be
@@ -16,14 +16,14 @@ module Sqrbl
   # Taken together, these two features (back-references and instance_eval)
   # let us provide a useful facility for defining helper methods inside a
   # block, and accessing them using scoping rules that work in an intuitive
-  # manner.  For example, if a Migration defines a method #foo, which is
+  # manner.  For example, if a Conversion defines a method #foo, which is
   # later called from inside a Step's block, the Step can catch that call
   # using method_missing and delegate it to its StepPair, which in turn
-  # will delegate to its Group, which in turn will delegate to its Migration.
+  # will delegate to its Group, which in turn will delegate to its Conversion.
   #
   # Confused yet?  Here's a slightly modified version of the example in README.txt:
   #
-  #   Sqrbl.migration "Convert from old widgets to new widgets" do
+  #   Sqrbl.conversion "Convert from old widgets to new widgets" do
   #     def new_widget_insert()
   #       insert_into("new_widgets", {
   #         :name     => 'widget_name',

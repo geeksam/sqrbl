@@ -5,7 +5,7 @@
 - bin/sqrbl should create an empty SQrbL file with the following simple template:
     require 'rubygems'
     require 'sqrbl'
-    Sqrbl.migration do
+    Sqrbl.conversion do
       # (copy the rest from README.txt)
     end
 

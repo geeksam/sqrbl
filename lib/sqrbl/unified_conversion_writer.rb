@@ -2,7 +2,7 @@ module Sqrbl
   # Writes two files:  output_directory/all_up.sql and output_directory/all_down.sql.
   # * output_directory/all_up.sql contains all 'up' steps, in creation order.
   # * output_directory/all_down.sql contains all 'down' steps, in reverse creation order.
-  class UnifiedMigrationWriter < BaseMigrationWriter
+  class UnifiedConversionWriter < BaseConversionWriter
     # Create all_up.sql and all_down.sql in output_directory.
     def write!
       ensure_dir_exists(output_directory)
@@ -12,12 +12,12 @@ module Sqrbl
 
     # Output from all 'up' steps, in creation order
     def all_up_steps_output
-      migration.up_steps.map(&:output).join
+      conversion.up_steps.map(&:output).join
     end
 
     # Output from all 'down' steps, in reverse creation order
     def all_down_steps_output
-      migration.down_steps.reverse.map(&:output).join
+      conversion.down_steps.reverse.map(&:output).join
     end
 
     protected

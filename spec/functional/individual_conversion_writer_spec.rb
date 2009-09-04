@@ -2,9 +2,9 @@ require File.join(File.dirname(__FILE__), %w[.. spec_helper])
 
 include Sqrbl
 
-describe IndividualMigrationWriter do
+describe IndividualConversionWriter do
   before(:each) do
-    @mig = Sqrbl.build_migration do
+    @cvn = Sqrbl.build_conversion do
       group 'Group one' do
         step 'Step one' do
           up   { write 'Step one up'   }
@@ -14,7 +14,7 @@ describe IndividualMigrationWriter do
     end
 
     @base_dir = File.expand_path(File.join(File.dirname(__FILE__), 'sql'))
-    @writer = IndividualMigrationWriter.new(@mig)
+    @writer = IndividualConversionWriter.new(@cvn)
   end
 
   it "should have a output_directory attribute" do
@@ -36,9 +36,9 @@ describe IndividualMigrationWriter do
     end
   end
 
-  describe "for a migration with two groups and three steps" do
+  describe "for a conversion with two groups and three steps" do
     before(:each) do
-      @mig = Sqrbl.build_migration do
+      @cvn = Sqrbl.build_conversion do
         group 'Group one' do
           step 'Step one' do
             up   { write 'Step one up'   }
@@ -58,11 +58,11 @@ describe IndividualMigrationWriter do
       end
 
       @base_dir = File.expand_path(File.join(File.dirname(__FILE__), 'sql'))
-      @writer = IndividualMigrationWriter.new(@mig)
+      @writer = IndividualConversionWriter.new(@cvn)
     end
 
     it "should create a separate subdirectory in [output_directory]/up for each group" do
-      @mig.groups.each_with_index do |group, idx|
+      @cvn.groups.each_with_index do |group, idx|
         group_dir   = "#{idx + 1}_#{group.unix_name}"
         up_subdir   = File.join(@writer.output_directory, 'up',   group_dir)
         down_subdir = File.join(@writer.output_directory, 'down', group_dir)
@@ -76,7 +76,7 @@ describe IndividualMigrationWriter do
     end
 
     it "should create a separate file for each step, in the subdirectory for that step's group" do
-      @mig.groups.each_with_index do |group, idx|
+      @cvn.groups.each_with_index do |group, idx|
         group_dir     = "#{idx + 1}_#{group.unix_name}"
         up_subdir   = File.join(@writer.output_directory, 'up',   group_dir)
         down_subdir = File.join(@writer.output_directory, 'down', group_dir)
@@ -93,9 +93,9 @@ describe IndividualMigrationWriter do
     end
   end
 
-  describe "for a migration with 10 groups" do
+  describe "for a conversion with 10 groups" do
     before(:each) do
-      @mig = Sqrbl.build_migration do
+      @cvn = Sqrbl.build_conversion do
         group 'Group one' do
           step 'Step one' do
             up   { write 'Step one up'   }
@@ -158,7 +158,7 @@ describe IndividualMigrationWriter do
         end
       end
 
-      @writer = IndividualMigrationWriter.new(@mig)
+      @writer = IndividualConversionWriter.new(@cvn)
     end
 
     it "should left-fill the group numbers with zeros" do

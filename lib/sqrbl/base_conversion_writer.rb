@@ -1,9 +1,9 @@
 require 'fileutils'
 
 module Sqrbl
-  # Base class for other migration writers.
-  class BaseMigrationWriter
-    attr_accessor :migration, :output_directory
+  # Base class for other conversion writers.
+  class BaseConversionWriter
+    attr_accessor :conversion, :output_directory
 
     class << self
       # List all classes that inherit from this one
@@ -16,23 +16,23 @@ module Sqrbl
       end
 
       # Convenience method:  create a new instance and invoke <tt>write!</tt> on it.
-      def write_migration!(migration)
-        new(migration).write!
+      def write_conversion!(conversion)
+        new(conversion).write!
       end
     end
 
-    def initialize(migration) #:nodoc:
-      @migration = migration
+    def initialize(conversion) #:nodoc:
+      @conversion = conversion
       set_default_output_dir!
     end
 
     protected
     # Set the output_directory attribute based on the output_directory or creating_file
-    # attributes of the given migration, in that order
+    # attributes of the given conversion, in that order
     def set_default_output_dir!
-      raise "No migration given!" unless migration
-      self.output_directory ||= migration.output_directory
-      self.output_directory ||= migration.creating_file && File.join(File.expand_path(File.dirname(migration.creating_file)), 'sql')
+      raise "No conversion given!" unless conversion
+      self.output_directory ||= conversion.output_directory
+      self.output_directory ||= conversion.creating_file && File.join(File.expand_path(File.dirname(conversion.creating_file)), 'sql')
       raise "Unable to determine output directory!" unless self.output_directory
     end
 

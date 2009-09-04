@@ -2,26 +2,26 @@ require File.join(File.dirname(__FILE__), %w[.. spec_helper])
 
 include Sqrbl
 
-describe UnifiedMigrationWriter do
-  describe "for a migration with #output_directory set" do
-    it "should set #output_directory from the migration's #output_directory" do
-      mig = mock('Migration', :output_directory => '/path/to/sql', :creating_file => nil)
-      writer = UnifiedMigrationWriter.new(mig)
-      writer.output_directory.should == mig.output_directory
+describe UnifiedConversionWriter do
+  describe "for a conversion with #output_directory set" do
+    it "should set #output_directory from the conversion's #output_directory" do
+      cvn = mock('Conversion', :output_directory => '/path/to/sql', :creating_file => nil)
+      writer = UnifiedConversionWriter.new(cvn)
+      writer.output_directory.should == cvn.output_directory
     end
   end
 
-  describe "for a migration with output_directory blank" do
-    it "should set #output_directory using the dirname of the migration's #creating_file, plus /sql" do
-      mig = mock('Migration', :output_directory => nil, :creating_file => '/path/to/some/sqrbl_file.rb')
-      writer = UnifiedMigrationWriter.new(mig)
+  describe "for a conversion with output_directory blank" do
+    it "should set #output_directory using the dirname of the conversion's #creating_file, plus /sql" do
+      cvn = mock('Conversion', :output_directory => nil, :creating_file => '/path/to/some/sqrbl_file.rb')
+      writer = UnifiedConversionWriter.new(cvn)
       writer.output_directory.should == '/path/to/some/sql'
     end
   end
 
-  describe "for a migration with two groups and three steps" do
+  describe "for a conversion with two groups and three steps" do
     before(:each) do
-      @mig = Sqrbl.build_migration do
+      @cvn = Sqrbl.build_conversion do
         group 'Group one' do
           step 'Step one' do
             up   { write 'Step one up'   }
@@ -41,7 +41,7 @@ describe UnifiedMigrationWriter do
       end
 
       @base_dir = File.expand_path(File.join(File.dirname(__FILE__), 'sql'))
-      @writer = UnifiedMigrationWriter.new(@mig)
+      @writer = UnifiedConversionWriter.new(@cvn)
     end
 
     it "should not create the target directory if it already exists" do
@@ -65,7 +65,7 @@ describe UnifiedMigrationWriter do
     end
 
     it "should combine the contents of all up steps in order" do
-      @writer.all_up_steps_output.should == @mig.up_steps.map(&:output).join
+      @writer.all_up_steps_output.should == @cvn.up_steps.map(&:output).join
     end
 
     it "should write the contents of all up steps to the all_up.sql file" do
@@ -83,7 +83,7 @@ describe UnifiedMigrationWriter do
     end
 
     it "should combine the contents of all down steps in REVERSE order" do
-      @writer.all_down_steps_output.should == @mig.down_steps.reverse.map(&:output).join
+      @writer.all_down_steps_output.should == @cvn.down_steps.reverse.map(&:output).join
     end
 
     it "should write the contents of all down steps to the all_down.sql file" do
