@@ -1,12 +1,16 @@
-- Change verbiage: "conversion" instead of "migration".
-
 - Writers should create some sort of output to let you know that something happened.
 
 - bin/sqrbl should create an empty SQrbL file with the following simple template:
-    require 'rubygems'
-    require 'sqrbl'
+    require 'sqrbl'   # but not rubygems, because apparently that's evil
     Sqrbl.conversion do
       # (copy the rest from README.txt)
     end
 
 - Add some string-munging for pluralize(n, thing, things), and possibly move #unix_name into the string-munging module.
+
+- SQL helpers:
+    inner_join(expr, alias, join_expr)
+    outer_join(expr, alias, join_expr)
+    join(join_type, expr, alias, join_expr)
+  Move these into a module, mix same into Step?
+
